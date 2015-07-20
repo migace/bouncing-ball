@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bouncing ball - tiptopdesign.pl</title>
+
+  <style>
+    #gBoard {
+      display: block;
+      margin: 50px auto 0 auto;
+      border: 2px dotted #000;
+      width: 640px;
+      height: 480px;
+    }
+  </style>
+
+  <script type="text/javascript">
+    MYAPP = MYAPP || {};
+
+    var MYAPP = (function() {
+      var cWidth = undefined,
+          cHeight = undefined,
+          cvs = undefined,
+          ctx = undefined,
+          fps = 1000/60,
+          radius = 15,
+
+      init = function() {
+        cvs = document.getElementById('gBoard'),
+        ctx = cvs.getContext('2d');
+        cWidth = cvs.width;
+        cHeight = cvs.height;
+      },
+
+      drawArc = function(x, y) {
+        if (typeof x === 'undefined' || typeof y === 'undefined') {
+          throw {
+            name: 'Bad arguments!',
+            message: 'Argument x or y is undefined.'
+          };
+        }
+
+        ctx.beginPath();
+        ctx.fillStyle = '#0000000';
+        ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
+        ctx.fill();
+        ctx.closePath();
+      },
+
+      clearBoard = function() {
+        ctx.clearRect(0, 0, cWidth, cHeight);
+      },
+
+      animate = function() {
+        var dx = 5,
+            dy = 5,
+            startX = 50,
+            startY = 50;
+
+        setInterval(function() {
+          clearBoard();
+
+          if (startX + radius >= cWidth ||
+              startX - radius <= 0)
+          {
+            dx = -dx;
+          }
+
+          if (startY + radius >= cHeight ||
+              startY - radius <= 0)
+          {
+            dy = -dy;
+          }
+
+          drawArc(startX, startY);
+          startX += dx;
+          startY += dy;
+        }, fps);
+      };
+
+      return {
+        init: init,
+        animate: animate
+      };
+    })();
+
+    document.addEventListener('DOMContentLoaded', function() {
+      MYAPP.init();
+      MYAPP.animate();
+    });
+  </script>
+</head>
+<body>
+  <canvas id="gBoard" width="640" height="480">
+    <p>
+      Element canvas jest nie obsługiwany w Twojej przeglądarce.<br />
+      Zaaktualizuj ją do najnowszej wersji.
+    </p>
+  </canvas>
+</body>
+</html>
